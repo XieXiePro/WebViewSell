@@ -1,0 +1,62 @@
+apply plugin: 'com.android.library'
+//所有library工程都要用的公共配置，由各个子模块直接apply from
+android {
+    defaultConfig {
+        minSdkVersion 16
+        targetSdkVersion 26
+        compileSdkVersion 26
+        buildToolsVersion "26.0.2"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        multiDexEnabled true
+
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments = [moduleName: project.getName()]
+            }
+        }
+        ndk {
+            // 设置支持的SO库架构
+            abiFilters 'armeabi', 'x86', 'armeabi-v7a', 'x86_64', 'arm64-v8a'
+        }
+        manifestPlaceholders = [
+                JPUSH_PKGNAME: "com.wgmf.yxgj",
+                JPUSH_APPKEY : "77382366e1b2044528e6e357", //JPush上注册的包名对应的appkey.
+                JPUSH_CHANNEL: "google-play", //暂时填写默认值即可.
+        ]
+    }
+    // lint所有选项请单独加入
+    lintOptions {
+        abortOnError false
+    }
+
+}
+buildscript {
+    repositories {
+        jcenter()
+        mavenCentral()
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile 'com.android.support:multidex:1.0.1'
+    /*事件总线*/
+    compile 'org.greenrobot:eventbus:3.0.0'
+    /*路由*/
+    compile 'com.alibaba:arouter-api:1.2.1'
+    annotationProcessor 'com.alibaba:arouter-compiler:1.1.2'
+    /*数据库*/
+    compile 'org.greenrobot:greendao:3.2.0'
+    compile 'org.greenrobot:greendao-generator:3.2.2'
+    /*rxjava*/
+    compile 'io.reactivex:rxjava:1.3.0'
+    compile 'io.reactivex:rxandroid:1.1.0'
+    compile 'com.jakewharton.rxbinding:rxbinding:0.4.0'
+    /*防止RxJava中subscription导致内存泄漏*/
+    compile 'com.trello:rxlifecycle:1.0'
+    compile 'com.trello:rxlifecycle-components:1.0'
+    /*dagger依赖注入*/
+    annotationProcessor 'com.google.dagger:dagger-compiler:2.7'
+    compile 'com.google.dagger:dagger:2.7'
+    compile 'javax.annotation:jsr250-api:1.0'
+}
